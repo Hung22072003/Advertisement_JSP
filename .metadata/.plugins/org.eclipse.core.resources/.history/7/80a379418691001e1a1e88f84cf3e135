@@ -1,0 +1,43 @@
+package Controller;
+
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+
+@WebServlet("/HomeServlet")
+
+public class HomeServlet extends HttpServlet{
+	private static final long serialVersionUID = 1L;
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String pathInfo = request.getPathInfo();
+        if (pathInfo != null) {
+        	String[] pathParts = pathInfo.split("/");
+        	if(pathInfo.contains("/id=")) {
+        		String idString = pathParts[2].substring(3);
+        		request.setAttribute("idStudent", idString);
+        	}
+            if (pathParts.length > 1) {
+                String parameter = pathParts[1];
+                request.setAttribute("pathVariable", parameter);
+                doPost(request, response);
+            } else {
+                response.getWriter().println("Không có tham số từ đường dẫn.");
+            }
+        } else {
+            response.getWriter().println("Không có đường dẫn.");
+        }	
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String pathVariable = (String) request.getAttribute("pathVariable");
+		if(pathVariable == null) {
+			String pathInfo = request.getPathInfo();
+			 if (pathInfo != null) {
+		            String[] pathParts = pathInfo.split("/");
+		            if (pathParts.length > 1) {
+		                pathVariable = pathParts[1];
+		            } 
+		        }
+		}
+	}
+}
